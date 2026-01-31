@@ -56,14 +56,14 @@ export class ListSuggestionComponent {
   favorites: Suggestion[] = [];
 
   get filteredSuggestions(): Suggestion[] {
-    const title = this.searchTitle.trim().toLowerCase();
-    const category = this.searchCategory.trim().toLowerCase();
+    const q = this.searchTitle.trim().toLowerCase();
 
     return this.suggestions.filter((s) => {
-      const matchesTitle = !title || s.title.toLowerCase().includes(title);
-      const matchesCategory =
-        !category || s.category.toLowerCase().includes(category);
-      return matchesTitle && matchesCategory;
+      if (!q) return true;
+      return (
+        s.title.toLowerCase().includes(q) ||
+        s.category.toLowerCase().includes(q)
+      );
     });
   }
 

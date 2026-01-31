@@ -1,68 +1,48 @@
-<section class="suggestions">
-  <h2>Suggestions</h2>
+<section class="page">
+  <h1 class="page-title">Liste des suggestions</h1>
 
-  <div class="search">
-    <label>
-      Titre
-      <input
-        type="text"
-        placeholder="Rechercher par titre..."
-        [(ngModel)]="searchTitle"
-      />
-    </label>
-
-    <label>
-      Catégorie
-      <input
-        type="text"
-        placeholder="Rechercher par catégorie..."
-        [(ngModel)]="searchCategory"
-      />
-    </label>
+  <div class="searchbar">
+    <input
+      type="text"
+      placeholder="Rechercher une suggestion"
+      [(ngModel)]="searchTitle"
+    />
   </div>
 
-  <p class="count">
-    {{ filteredSuggestions.length }} suggestion(s) affichée(s)
-  </p>
-
-  <ul class="list">
-    <li class="card" *ngFor="let s of filteredSuggestions">
-      <div class="header">
-        <h3>{{ s.title }}</h3>
-        <span class="status" [attr.data-status]="s.status">{{ s.status }}</span>
-      </div>
+  <div class="cards">
+    <article class="card" *ngFor="let s of filteredSuggestions">
+      <h2 class="title">{{ s.title }}</h2>
 
       <div class="meta">
-        <span><strong>Catégorie :</strong> {{ s.category }}</span>
-        <span><strong>Date :</strong> {{ s.date | date : 'yyyy-MM-dd' }}</span>
-        <span><strong>Likes :</strong> {{ s.nbLikes }}</span>
+        <span class="category">{{ s.category }}</span>
+        <span class="dot">•</span>
+        <span class="date">{{ s.date | date : 'dd MMM yyyy' }}</span>
       </div>
 
       <p class="description">{{ s.description }}</p>
 
-      <div class="actions" *ngIf="canInteract(s)">
-        <button type="button" (click)="like(s)">Like</button>
-        <button
-          type="button"
-          (click)="addToFavorites(s)"
-          [disabled]="isFavorite(s)"
-        >
-          {{ isFavorite(s) ? 'Déjà en favoris' : 'Ajouter aux favoris' }}
-        </button>
+      <div class="footer">
+        <span class="badge" [attr.data-status]="s.status">
+          {{ s.status === 'acceptee' ? 'ACCEPTÉE' : s.status === 'refusee' ? 'REFUSÉE' : 'EN ATTENTE' }}
+        </span>
+
+        <div class="actions" *ngIf="canInteract(s)">
+          <button type="button" class="btn btn-like" (click)="like(s)">
+            👍 Like {{ s.nbLikes }}
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-fav"
+            (click)="addToFavorites(s)"
+            [disabled]="isFavorite(s)"
+          >
+            ♡ Ajouter aux favoris
+          </button>
+        </div>
       </div>
 
-      <p class="blocked" *ngIf="!canInteract(s)">
-        Interaction désactivée (suggestion refusée).
-      </p>
-    </li>
-  </ul>
 
-  <section class="favorites" *ngIf="favorites.length">
-    <h2>Favoris</h2>
-    <ul>
-      <li *ngFor="let f of favorites">
-        {{ f.title }} — <em>{{ f.category }}</em>
-      </li>
-    </ul>
-  </section>
+    </article>
+  </div>
 </section>
