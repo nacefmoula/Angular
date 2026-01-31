@@ -1,0 +1,68 @@
+<section class="suggestions">
+  <h2>Suggestions</h2>
+
+  <div class="search">
+    <label>
+      Titre
+      <input
+        type="text"
+        placeholder="Rechercher par titre..."
+        [(ngModel)]="searchTitle"
+      />
+    </label>
+
+    <label>
+      Catégorie
+      <input
+        type="text"
+        placeholder="Rechercher par catégorie..."
+        [(ngModel)]="searchCategory"
+      />
+    </label>
+  </div>
+
+  <p class="count">
+    {{ filteredSuggestions.length }} suggestion(s) affichée(s)
+  </p>
+
+  <ul class="list">
+    <li class="card" *ngFor="let s of filteredSuggestions">
+      <div class="header">
+        <h3>{{ s.title }}</h3>
+        <span class="status" [attr.data-status]="s.status">{{ s.status }}</span>
+      </div>
+
+      <div class="meta">
+        <span><strong>Catégorie :</strong> {{ s.category }}</span>
+        <span><strong>Date :</strong> {{ s.date | date : 'yyyy-MM-dd' }}</span>
+        <span><strong>Likes :</strong> {{ s.nbLikes }}</span>
+      </div>
+
+      <p class="description">{{ s.description }}</p>
+
+      <div class="actions" *ngIf="canInteract(s)">
+        <button type="button" (click)="like(s)">Like</button>
+        <button
+          type="button"
+          (click)="addToFavorites(s)"
+          [disabled]="isFavorite(s)"
+        >
+          {{ isFavorite(s) ? 'Déjà en favoris' : 'Ajouter aux favoris' }}
+        </button>
+      </div>
+
+      <p class="blocked" *ngIf="!canInteract(s)">
+        Interaction désactivée (suggestion refusée).
+      </p>
+    </li>
+  </ul>
+
+  <section class="favorites" *ngIf="favorites.length">
+    <h2>Favoris</h2>
+    <ul>
+      <li *ngFor="let f of favorites">
+        {{ f.title }} — <em>{{ f.category }}</em>
+      </li>
+    </ul>
+  </section>
+</section>
